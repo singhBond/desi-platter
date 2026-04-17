@@ -262,7 +262,7 @@ export const Header = () => (
 
     {/* Tagline - Modern Fast Food Style */}
     <h2 className="relative z-10 text-lg md:text-4xl font-bold text-white tracking-widest mt-1 flex items-center gap-3">
-      BURGERS•PIZZAS•FRIES•SHAKES
+      BURGERS•PIZZAS•FRIES•SMOOTHIES
       
     </h2>
 <p className="relative z-10 text-zinc-50 md:text-lg text-md font-serif mt-1">
