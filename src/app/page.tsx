@@ -1,6 +1,9 @@
 "use client"
 import React from 'react'
 import LandingPage from "@/components/LandingPage"
+import DigiMenu from '@/components/DigiMenu'
+
+
 
 
 const page = () => {
@@ -8,6 +11,7 @@ const page = () => {
     <main>
       <LandingPage/>
       {/* <Home/> */}
+      {/* <DigiMenu/> */}
     </main>
   )
 }

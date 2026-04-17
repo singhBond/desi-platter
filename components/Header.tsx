@@ -274,7 +274,7 @@ export const Header = () => (
     </p>
 
     {/* Timings */}
-    <p className="relative z-10 text-zinc-400 md:text-lg text-sm font-medium mt-1">
+    <p className="relative z-10 text-zinc-400 md:text-lg text-sm font-medium my-1">
       ~ Accepting Online Orders : 11:00 AM – 11:00 PM  ~
     </p>
 
