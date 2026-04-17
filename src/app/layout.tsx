@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bakers Corner",
-  description: "Bakes n Cakes",
+  title: "Desi Platter",
+  description: "Desi Platter Cafe & Cloud Kitchen",
 };
 
 export default function RootLayout({

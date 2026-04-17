@@ -32,7 +32,7 @@ export default function BakeryLoader() {
       {/* Text vui nhộn */}
       <div className="mt-8 text-center">
         <p className="text-3xl font-bold text-orange-800 tracking-wide">
-          Baking fresh goodies...
+          Cooking Fresh Foodies
         </p>
         <p className="text-lg text-amber-700 mt-2 animate-pulse">
           Just a few seconds, the oven is hot!
