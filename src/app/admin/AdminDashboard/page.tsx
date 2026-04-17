@@ -173,7 +173,7 @@ export default function AdminPanel() {
                   },
                 ];
               } else {
-                quantities = null;
+                // quantities = null;
               }
             }
 
