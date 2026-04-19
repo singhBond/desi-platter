@@ -211,7 +211,7 @@ import { ProductItem, mapApiToProduct, Product } from "./ProductItem";
 
 interface ProductItemFetcherProps {
   categoryId: string;
-  categoryName?: string;        // Will be passed from parent
+  categoryName?: string;
   filter: "all" | "veg" | "nonveg";
 }
 
@@ -233,7 +233,7 @@ export default function ProductItemFetcher({
 
     const fetchProducts = async () => {
       try {
-        setLoading(true);
+        setLoading(true);     // ← Show loading immediately on category change
         setError(null);
 
         const res = await fetch("/api/menu", {
@@ -271,19 +271,37 @@ export default function ProductItemFetcher({
       return true;
     });
 
-  // Loading State
+  // Loading State - Now consistent across all screen sizes
   if (loading) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-68 gap-y-2">
-        {Array(8).fill(0).map((_, i) => (
-          <div
-            key={i}
-            className="h-80 bg-gray-200 rounded-2xl animate-pulse border border-gray-100"
-          />
-        ))}
-      </div>
-    );
-  }
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-66 gap-y-2">
+      {Array(8).fill(0).map((_, i) => (
+        <div
+          key={i}
+          className="p-3 border border-gray-100 rounded-2xl bg-white"
+        >
+          {/* Image Skeleton */}
+          <div className="h-48 w-full bg-gray-200 rounded-xl animate-pulse" />
+
+          {/* Text Content Skeleton */}
+          <div className="mt-3 space-y-2">
+            {/* Title */}
+            <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse" />
+
+            {/* Subtitle */}
+            <div className="h-3 w-1/2 bg-gray-200 rounded animate-pulse" />
+
+            {/* Price / Button Row */}
+            <div className="flex justify-between items-center mt-2">
+              <div className="h-4 w-1/4 bg-gray-200 rounded animate-pulse" />
+              <div className="h-8 w-16 bg-gray-200 rounded-lg animate-pulse" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
   // Error State
   if (error) {
@@ -329,7 +347,7 @@ export default function ProductItemFetcher({
       )}
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-68 gap-y-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-66 gap-y-2">
         {filteredProducts.map((product) => (
           <ProductItem key={product.id} product={product} />
         ))}
