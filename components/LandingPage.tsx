@@ -52,7 +52,7 @@ export default function LandingPage() {
       <VegFilter filter={filter} setFilter={setFilter} />
 
       {/* Layout */}
-      <div className="bg-orange-50 max-w-7xl mx-auto px-3 py-6 flex gap-2">
+      <div className="bg-orange-50 max-w-7xl mx-auto px-3 py-2 flex gap-2">
 
         {/* Sidebar */}
         <CategorySidebar

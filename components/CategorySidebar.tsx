@@ -232,9 +232,9 @@ export const CategorySidebar: React.FC<Props> = ({
   );
 
   return (
-    <aside className="w-20 sm:w-40 md:w-32 lg:w-36 sticky top-14 h-[calc(100vh-6rem)] overflow-y-auto bg-gradient-to-b from-pink-100 via-white to-pink-50 border-r border-pink-200 rounded-2xl shadow-sm p-3 scrollbar-thin scrollbar-thumb-pink-300">
+    <aside className="w-20 sm:w-40 md:w-32 lg:w-36 sticky top-14 h-[calc(100vh-6rem)] overflow-y-auto bg-linear-to-b from-red-100 via-red-200 to-red-100 border-r border-pink-200 rounded-2xl shadow-sm p-1 scrollbar-thin scrollbar-thumb-pink-300">
       <div className="mb-4 text-center">
-        <h2 className="text-xs font-bold uppercase  text-pink-600">
+        <h2 className="text-xs mt-1 font-bold uppercase  text-red-800">
           Catagory
         </h2>
       </div>
@@ -256,14 +256,14 @@ export const CategorySidebar: React.FC<Props> = ({
           No categories available
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-1">
           {categories.map((cat) => (
             <div
               key={cat.id}
               onClick={() => onCategoryChange(cat.id)}
-              className={`group flex flex-col items-center cursor-pointer rounded-2xl p-3 transition-all duration-200 border ${
+              className={`group flex flex-col items-center cursor-pointer rounded-2xl p-2 transition-all duration-200 border ${
                 activeCategory === cat.id
-                  ? "bg-white border-pink-500 shadow-md scale-105"
+                  ? "bg-white border-pink-500 shadow-md scale-105 "
                   : "hover:bg-white/80 border-transparent hover:shadow"
               }`}
             >
@@ -284,7 +284,7 @@ export const CategorySidebar: React.FC<Props> = ({
               </div>
 
               {/* Category Name */}
-              <span className="text-[10px] sm:text-xs font-semibold text-center mt-2 text-gray-800 leading-tight tracking-wide">
+              <span className="text-[12px] sm:text-xs font-semibold text-center mt-1 text-gray-800 leading-tight tracking-wide">
                 {cat.name}
               </span>
             </div>

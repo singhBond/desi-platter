@@ -653,10 +653,10 @@ export const Cart = () => {
         </div>
       </div>
 
-      {/* Cart Dialog */}
+      {/* Cart Dialog - Improved for Small Screens */}
       <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto rounded-2xl p-0">
-          <DialogHeader className="p-4 px-10 pb-3 border-b sticky top-0 bg-white z-10 rounded-t-2xl">
+        <DialogContent className="max-w-[95vw] sm:max-w-lg md:max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl p-0">
+          <DialogHeader className="p-4 px-5 sm:px-10 pb-3 border-b sticky top-0 bg-white z-10 rounded-t-2xl">
             <DialogTitle className="text-xl font-bold flex items-center justify-between">
               <span className="flex items-center gap-3">
                 <ShoppingCart size={28} />
@@ -666,14 +666,14 @@ export const Cart = () => {
                 variant="ghost"
                 size="icon-lg"
                 onClick={() => setOpen(false)}
-                className="h-11 w-11 sm:h-11 sm:w-11"
+                className="h-11 w-11"
               >
                 <X size={24} className="text-gray-600" />
               </Button>
             </DialogTitle>
           </DialogHeader>
 
-          <div className="p-6 space-y-6">
+          <div className="p-4 sm:p-6 space-y-6">
             {cart.length === 0 ? (
               <div className="text-center py-16 text-gray-500">
                 <ShoppingCart size={80} className="mx-auto mb-4 opacity-30" />
@@ -682,12 +682,12 @@ export const Cart = () => {
               </div>
             ) : (
               <>
-                {/* Cart Items */}
-                <div className="space-y-2 px-3 sm:px-0">
+                {/* Cart Items - Better fit on small screens */}
+                <div className="space-y-3 px-1 sm:px-0">
                   {cart.map((item, index) => (
                     <div
                       key={index}
-                      className="mx-auto w-full max-w-3xl flex gap-3 sm:gap-4 bg-gray-50 rounded-2xl px-6 py-3 sm:p-4 border border-gray-200"
+                      className="w-full flex gap-3 sm:gap-4 bg-gray-50 rounded-2xl px-4 py-4 sm:p-5 border border-gray-200"
                     >
                       <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 bg-gray-200">
                         <img
@@ -700,14 +700,14 @@ export const Cart = () => {
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <h4 className="font-bold text-base sm:text-lg text-gray-800 truncate">
+                          <div className="min-w-0 flex-1">
+                            <h4 className="font-bold text-base sm:text-lg text-gray-800 line-clamp-2 pr-2">
                               {item.name}
                             </h4>
 
                             <div className="flex flex-wrap items-center gap-2 mt-1">
                               {item.unit && (
-                                <span className="text-xs sm:text-sm font-medium bg-blue-100 text-blue-700 px-2 sm:px-3 py-1 rounded-full">
+                                <span className="text-xs sm:text-sm font-medium bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full">
                                   {item.unit}
                                 </span>
                               )}
@@ -732,7 +732,7 @@ export const Cart = () => {
                             variant="ghost"
                             size="icon"
                             onClick={() => removeItem(index)}
-                            className="shrink-0"
+                            className="shrink-0 -mt-1"
                           >
                             <Trash2 size={18} className="text-red-500" />
                           </Button>
@@ -744,6 +744,7 @@ export const Cart = () => {
                               size="icon"
                               variant="outline"
                               onClick={() => updateQuantity(index, -1)}
+                              className="h-9 w-9"
                             >
                               <Minus size={14} />
                             </Button>
@@ -756,12 +757,13 @@ export const Cart = () => {
                               size="icon"
                               variant="outline"
                               onClick={() => updateQuantity(index, 1)}
+                              className="h-9 w-9"
                             >
                               <Plus size={14} />
                             </Button>
                           </div>
 
-                          <span className="font-bold text-lg sm:text-xl ml-4 text-green-600">
+                          <span className="font-bold text-lg sm:text-xl text-green-600">
                             ₹{item.price * item.quantity}
                           </span>
                         </div>
@@ -771,20 +773,20 @@ export const Cart = () => {
                 </div>
 
                 {/* Order Mode */}
-                <div className="bg-gray-100 rounded-2xl p-2 mx-3">
+                <div className="bg-gray-100 rounded-2xl p-3 mx-0 sm:mx-0 ">
                   <p className="font-semibold mb-3">Order Type</p>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-3 lg:justify-self-center">
                     <Button
                       variant={orderMode === "offline" ? "green" : "outline"}
-                      className="h-14"
+                      className="h-14 md:w-38"
                       onClick={() => setOrderMode("offline")}
                     >
                       <Store size={22} />
-                      Takeaway
+                      Takeaway/Dine-in
                     </Button>
                     <Button
                       variant={orderMode === "online" ? "orange" : "outline"}
-                      className="h-14"
+                      className="h-14 md:w-38"
                       onClick={() => setOrderMode("online")}
                     >
                       <Bike size={22} />
@@ -794,7 +796,7 @@ export const Cart = () => {
                 </div>
 
                 {/* Customer Info */}
-                <div className="space-y-4 mx-4">
+                <div className="space-y-4 mx-1 sm:mx-0">
                   <div className="space-y-1">
                     <Label>Your Name *</Label>
                     <Input
@@ -835,7 +837,7 @@ export const Cart = () => {
                 </div>
 
                 {/* Price Summary */}
-                <div className="bg-linear-to-r from-yellow-50 to-orange-50 rounded-2xl p-4 mx-4 border-2 border-yellow-300">
+                <div className="bg-linear-to-r from-yellow-50 to-orange-50 rounded-2xl p-5 mx-1 sm:mx-0 border-2 border-yellow-300">
                   <div className="space-y-2">
                     <div className="flex justify-between text-lg">
                       <span>Subtotal</span>
@@ -855,7 +857,7 @@ export const Cart = () => {
                 </div>
 
                 {/* Place Order */}
-                <div className="w-full flex justify-center px-4 mt-6">
+                <div className="w-full flex justify-center px-2 sm:px-4 mt-6">
                   <Button
                     size="lg"
                     className="w-full max-w-sm h-14 text-lg sm:text-xl font-bold bg-green-600 hover:bg-green-700 shadow-lg rounded-xl"

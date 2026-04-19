@@ -494,7 +494,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Plus, Minus, X } from "lucide-react";
 import dynamic from "next/dynamic";
 
-// Dynamic Read More
+// Dynamic Read More (unchanged)
 const DescriptionWithReadMore = dynamic(
   () =>
     Promise.resolve(({ text }: { text: string }) => {
@@ -522,7 +522,7 @@ const DescriptionWithReadMore = dynamic(
   { ssr: false }
 );
 
-// ==================== API RESPONSE INTERFACE ====================
+// ==================== INTERFACES & MAPPER (unchanged) ====================
 interface ApiProduct {
   id: string;
   name: string;
@@ -540,7 +540,6 @@ interface ApiProduct {
   unit_name?: string;
 }
 
-// ==================== PRODUCT INTERFACE ====================
 export interface Product {
   id: string;
   name: string;
@@ -555,7 +554,6 @@ export interface Product {
   categoryId?: string;
 }
 
-// Helper to convert API item → Product
 export const mapApiToProduct = (item: any): Product => {
   const rawImages = [
     item.image,
@@ -613,7 +611,6 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
   const images = product.imageUrls.length ? product.imageUrls : [product.imageUrl || "/placeholder.svg"];
   const firstImage = images[0];
 
-  // Reset states when modal opens
   useEffect(() => {
     if (open) {
       setTempQuantity(1);
@@ -621,16 +618,10 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
     }
   }, [open]);
 
-  // ==================== BACK BUTTON HANDLING ====================
   useEffect(() => {
     if (open) {
-      // Push new state to history when modal opens
       window.history.pushState(null, "", window.location.href);
-
-      const handlePopState = () => {
-        setOpen(false);
-      };
-
+      const handlePopState = () => setOpen(false);
       window.addEventListener("popstate", handlePopState);
       return () => window.removeEventListener("popstate", handlePopState);
     }
@@ -686,18 +677,26 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
           onClick?.();
           setOpen(true);
         }}
-        className="overflow-hidden w-full rounded-2xl bg-white shadow-md hover:shadow-xl transition-all cursor-pointer border border-gray-100 hover:border-slate-300 group"
+        className="overflow-hidden w-64  rounded-2xl bg-white shadow-md hover:shadow-xl transition-all cursor-pointer border border-gray-100 hover:border-slate-300 group relative"
       >
-        <div className="absolute  top-89 right-50 z-10">
+        {/* Veg / Non-Veg Indicator - Top Left */}
+        <div className="absolute top-3 left-3 z-20">
           <div
-            className={`w-6 h-6 border-2 rounded-sm flex items-center justify-center ${
-              product.isVeg ? "border-green-600 bg-green-500" : "border-red-600 bg-red-500"
+            className={`w-6 h-6 border-2 rounded-md flex items-center justify-center shadow-sm ${
+              product.isVeg 
+                ? "border-green-600 bg-green-50" 
+                : "border-red-600 bg-red-50"
             }`}
           >
-            <div className="w-3 h-3 bg-white rounded-full" />
+            <div 
+              className={`w-3 h-3 rounded-full ${
+                product.isVeg ? "bg-green-600" : "bg-red-600"
+              }`}
+            />
           </div>
         </div>
 
+        {/* Image Section */}
         <div className="relative w-full h-56 bg-gray-100">
           <img
             src={firstImage}
@@ -715,8 +714,9 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
           )}
         </div>
 
-        <div className="p-4 ">
-          <h3 className="font-semibold text-xl text-gray-800 line-clamp-2 ">
+        {/* Product Info */}
+        <div className="p-4">
+          <h3 className="font-semibold text-xl text-gray-800 line-clamp-2">
             {product.name}
           </h3>
           <div className="mt-3 flex items-center gap-3">
@@ -724,25 +724,26 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
             {product.mrp && product.mrp > product.price && (
               <span className="text-sm text-gray-500 line-through">₹{product.mrp}</span>
             )}
-            {product.unit && <span className="text-lg  text-gray-500">/{product.unit}</span>}
+            {product.unit && <span className="text-lg text-gray-500">/{product.unit}</span>}
           </div>
         </div>
       </div>
 
-      {/* Product Detail Dialog */}
+      {/* Product Detail Dialog - (Veg/Non-Veg kept here as well for consistency) */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-full w-full h-full md:max-w-3xl md:h-auto md:max-h-[90vh] rounded-none md:rounded-2xl p-0 overflow-hidden flex flex-col">
-          <DialogHeader className="p-5 border-b shrink-0">
+          <DialogHeader className="p-4 border-b shrink-0">
             <DialogTitle className="text-xl md:text-2xl font-bold flex items-center gap-3">
               {product.name}
-              <div className={`w-6 h-6 border-2 rounded-sm flex items-center justify-center flex-shrink-0 ${
-                product.isVeg ? "border-green-600 bg-green-500" : "border-red-600 bg-red-500"
+              <div className={`w-6 h-6 border-2 rounded-full flex items-center justify-center shrink-0 ${
+                product.isVeg ? "border-green-600 bg-green-50" : "border-red-600 bg-red-50"
               }`}>
-                <div className="w-3 h-3 bg-white rounded-full" />
+                <div className={`w-3 h-3 rounded-full ${product.isVeg ? "bg-green-600" : "bg-red-600"}`} />
               </div>
             </DialogTitle>
           </DialogHeader>
 
+          {/* Rest of your dialog code remains exactly the same */}
           <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-slate-50">
             <div className="flex flex-col md:flex-row gap-6">
               {/* Image Section */}
@@ -779,15 +780,11 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
               <div className="flex-1 flex flex-col gap-y-6">
                 {product.description && (
                   <div className="relative bg-linear-to-r from-slate-300 to-slate-100 bg-slate-100 border-l-4 border-slate-600 rounded-lg p-3">
-                    <span className="absolute -top-2 -left-1 text-5xl text-slate-700 font-serif">
-                      “
-                    </span>
+                    <span className="absolute -top-2 -left-1 text-5xl text-slate-700 font-serif">“</span>
                     <p className="italic text-gray-700 leading-relaxed font-serif">
                       <DescriptionWithReadMore text={product.description} />
                     </p>
-                    <span className="absolute -bottom-7 right-2 text-5xl text-slate-700 font-serif">
-                      ”
-                    </span>
+                    <span className="absolute -bottom-7 right-2 text-5xl text-slate-700 font-serif">”</span>
                   </div>
                 )}
 
@@ -823,7 +820,7 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Full Screen Image Viewer */}
+      {/* Full Screen Image Viewer (unchanged) */}
       <Dialog open={fullImageOpen} onOpenChange={setFullImageOpen}>
         <DialogContent className="max-w-full h-full p-0 bg-black border-none rounded-none">
           <button

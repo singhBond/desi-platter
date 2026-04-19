@@ -117,84 +117,84 @@
 
 // API FETCHED DATA
 
-"use client";
+// "use client";
 
-import React, { useEffect, useMemo } from "react";
-import { ProductItem } from "@/components/ProductItem";
+// import React, { useEffect, useMemo } from "react";
+// import { ProductItem } from "@/components/ProductItem";
 
-interface QuantityOption {
-  quantity: string;
-  cakePrice: number;
-  birthdayPackPrice?: number | null;
-}
+// interface QuantityOption {
+//   quantity: string;
+//   cakePrice: number;
+//   birthdayPackPrice?: number | null;
+// }
 
-export interface Product {
-  id: string;
-  name: string;
-  description?: string;
-  categoryId: string;
-  price: number;
-  inStock: boolean;
-  quantities: QuantityOption[];
-  imageUrl?: string;
-  imageUrls: string[];
-  isVeg: boolean;
-}
+// export interface Product {
+//   id: string;
+//   name: string;
+//   description?: string;
+//   categoryId: string;
+//   price: number;
+//   inStock: boolean;
+//   quantities: QuantityOption[];
+//   imageUrl?: string;
+//   imageUrls: string[];
+//   isVeg: boolean;
+// }
 
-interface ProductGridProps {
-  products: Product[];           // ← Accept products as prop (for fetcher compatibility)
-  categoryId: string;
-  filter: "all" | "veg" | "nonveg";
-  onProductClick: (product: Product) => void;
-}
+// interface ProductGridProps {
+//   products: Product[];           // ← Accept products as prop (for fetcher compatibility)
+//   categoryId: string;
+//   filter: "all" | "veg" | "nonveg";
+//   onProductClick: (product: Product) => void;
+// }
 
-export const ProductGrid = ({
-  products,
-  categoryId,
-  filter,
-  onProductClick,
-}: ProductGridProps) => {
-  // Filter products
-  const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
-      // Category filter
-      if (categoryId && String(p.categoryId) !== String(categoryId)) {
-        return false;
-      }
+// export const ProductGrid = ({
+//   products,
+//   categoryId,
+//   filter,
+//   onProductClick,
+// }: ProductGridProps) => {
+//   // Filter products
+//   const filteredProducts = useMemo(() => {
+//     return products.filter((p) => {
+//       // Category filter
+//       if (categoryId && String(p.categoryId) !== String(categoryId)) {
+//         return false;
+//       }
 
-      // Veg / Non-veg filter
-      if (filter === "veg") return p.isVeg;
-      if (filter === "nonveg") return !p.isVeg;
+//       // Veg / Non-veg filter
+//       if (filter === "veg") return p.isVeg;
+//       if (filter === "nonveg") return !p.isVeg;
 
-      return true;
-    });
-  }, [products, categoryId, filter]);
+//       return true;
+//     });
+//   }, [products, categoryId, filter]);
 
-  // Scroll to top on category change
-  useEffect(() => {
-    if (categoryId) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }, [categoryId]);
+//   // Scroll to top on category change
+//   useEffect(() => {
+//     if (categoryId) {
+//       window.scrollTo({ top: 0, behavior: "smooth" });
+//     }
+//   }, [categoryId]);
 
-  if (filteredProducts.length === 0) {
-    return (
-      <div className="text-center py-16 text-gray-500">
-        <p className="text-lg font-medium">No products found</p>
-        <p className="text-sm mt-1">Try changing category or filter</p>
-      </div>
-    );
-  }
+//   if (filteredProducts.length === 0) {
+//     return (
+//       <div className="text-center py-16 text-gray-500">
+//         <p className="text-lg font-medium">No products found</p>
+//         <p className="text-sm mt-1">Try changing category or filter</p>
+//       </div>
+//     );
+//   }
 
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {filteredProducts.map((product, index) => (
-        <ProductItem
-          key={`${product.id}-${index}`}
-          product={product}
-          onClick={() => onProductClick(product)}
-        />
-      ))}
-    </div>
-  );
-};
+//   return (
+//     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+//       {filteredProducts.map((product, index) => (
+//         <ProductItem
+//           key={`${product.id}-${index}`}
+//           product={product}
+//           onClick={() => onProductClick(product)}
+//         />
+//       ))}
+//     </div>
+//   );
+// };

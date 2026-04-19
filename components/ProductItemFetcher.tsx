@@ -274,7 +274,7 @@ export default function ProductItemFetcher({
   // Loading State
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-68 gap-y-2">
         {Array(8).fill(0).map((_, i) => (
           <div
             key={i}
@@ -315,7 +315,7 @@ export default function ProductItemFetcher({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-1">
       {/* Category Header */}
       {categoryName && (
         <div className="flex items-center justify-between">
@@ -329,7 +329,7 @@ export default function ProductItemFetcher({
       )}
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-68 gap-y-2">
         {filteredProducts.map((product) => (
           <ProductItem key={product.id} product={product} />
         ))}

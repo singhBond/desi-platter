@@ -207,7 +207,7 @@ import {
 } from "lucide-react";
 
 export const Header = () => (
-  <div className="relative overflow-hidden flex flex-col items-center text-center py-1 md:py-8 
+  <div className="relative overflow-hidden flex flex-col items-center text-center py-1 md:py-1 
                   bg-linear-to-b from-red-700 via-red-950 to-black">
 
     {/* Dark wooden / fiery texture overlay */}
@@ -247,26 +247,26 @@ export const Header = () => (
     </div>
 
     {/* Logo */}
-    <div className="relative z-10 mt-3">
+    <div className="relative z-10 mt-2">
       <img
         src="/Logo.png"   // ← Change this to your actual fast food logo if available
-        className="h-24 w-24 md:h-48 md:w-48 rounded-full border-2 border-red-600 shadow-2xl shadow-red-900/50"
+        className="h-24 w-24 md:h-42 md:w-42 rounded-full border-2 border-red-600 shadow-2xl shadow-red-900/50"
         alt="Fast Food Cafe Logo"
       />
     </div>
 
     {/* Title - Bold Red & Black */}
-    <h1 className="relative z-10 text-4xl md:text-7xl font-black text-red-600 drop-shadow-[0_0_20px_#b91c1c] tracking-[0.05em] mt-4">
+    <h1 className="relative z-10 text-4xl md:text-6xl font-black text-red-600 drop-shadow-[0_0_20px_#b91c1c] tracking-[0.05em] mt-1">
       DESI<span className="text-white">PLATTER</span>
     </h1>
 
     {/* Tagline - Modern Fast Food Style */}
-    <h2 className="relative z-10 text-lg md:text-4xl font-bold text-white tracking-widest mt-1 flex items-center gap-3">
+    <h2 className="relative z-10 text-md md:text-3xl font-bold text-white tracking-widest mt-1 flex items-center gap-3">
       BURGERS•PIZZAS•FRIES•SMOOTHIES
       
     </h2>
 <p className="relative z-10 text-zinc-50 md:text-lg text-md font-serif mt-1">
-      “A Hygenic Cloud Kithcen”
+      “A Hygenic Cloud Kitchen
     </p>
     {/* Contact */}
     <p className="relative z-10 text-red-400 text-lg md:text-2xl font-semibold mt-1 flex items-center gap-2">
