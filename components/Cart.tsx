@@ -482,8 +482,9 @@ import {
   Store,
   Bike,
   X,
-  Package,
 } from "lucide-react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";   // Make sure this path is correct
 
 interface CartItem {
   id: string;
@@ -507,7 +508,8 @@ export const Cart = () => {
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
   const [address, setAddress] = useState("");
-  const deliveryCharge = 50;
+  
+  const [baseDeliveryCharge, setBaseDeliveryCharge] = useState(50); // fetched from backend
 
   // Load cart from localStorage
   useEffect(() => {
@@ -553,14 +555,47 @@ export const Cart = () => {
     if (open) {
       window.history.pushState(null, "", window.location.href);
 
-      const handlePopState = () => {
-        setOpen(false);
-      };
+      const handlePopState = () => setOpen(false);
 
       window.addEventListener("popstate", handlePopState);
       return () => window.removeEventListener("popstate", handlePopState);
     }
   }, [open]);
+
+  // ==================== FETCH DELIVERY CHARGE FROM FIRESTORE ====================
+  useEffect(() => {
+    if (open) {
+      const fetchDeliveryCharge = async () => {
+        try {
+          const deliveryDoc = doc(db, "settings", "deliveryCharge");
+          const snap = await getDoc(deliveryDoc);
+
+          if (snap.exists() && typeof snap.data()?.amount === "number") {
+            setBaseDeliveryCharge(snap.data().amount);
+          } else {
+            setBaseDeliveryCharge(50); // fallback
+          }
+        } catch (error) {
+          console.error("Failed to fetch delivery charge:", error);
+          setBaseDeliveryCharge(50);
+        }
+      };
+
+      fetchDeliveryCharge();
+    }
+  }, [open]);
+
+  // Calculate effective delivery charge (Free if subtotal >= 500)
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const effectiveDeliveryCharge = (orderMode === "online" && subtotal >= 500) 
+    ? 0 
+    : baseDeliveryCharge;
+
+  const total = orderMode === "online" 
+    ? subtotal + effectiveDeliveryCharge 
+    : subtotal;
+
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const updateQuantity = (index: number, delta: number) => {
     setCart((prev) =>
@@ -577,10 +612,6 @@ export const Cart = () => {
   const removeItem = (index: number) => {
     setCart((prev) => prev.filter((_, i) => i !== index));
   };
-
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const total = orderMode === "online" ? subtotal + deliveryCharge : subtotal;
 
   const clearCart = () => {
     setCart([]);
@@ -608,7 +639,12 @@ export const Cart = () => {
     if (notes.trim()) message += `*Notes:* ${notes.trim()}%0A`;
     if (orderMode === "online") {
       message += `*Address:* ${address.trim()}%0A`;
-      message += `*Delivery Charge:* +₹${deliveryCharge}%0A`;
+      
+      if (effectiveDeliveryCharge === 0) {
+        message += `*Delivery Charge:* FREE (Order above ₹500)%0A`;
+      } else {
+        message += `*Delivery Charge:* +₹${effectiveDeliveryCharge}%0A`;
+      }
     } else {
       message += `*Mode:* Takeaway%0A`;
     }
@@ -624,7 +660,13 @@ export const Cart = () => {
     });
 
     message += `*Subtotal:* ₹${subtotal}%0A`;
-    if (orderMode === "online") message += `*Delivery:* ₹${deliveryCharge}%0A`;
+    if (orderMode === "online") {
+      if (effectiveDeliveryCharge === 0) {
+        message += `*Delivery:* FREE%0A`;
+      } else {
+        message += `*Delivery:* ₹${effectiveDeliveryCharge}%0A`;
+      }
+    }
     message += `*TOTAL:* ₹${total}%0A%0AThank you! 🎉`;
 
     const whatsappUrl = `https://wa.me/918340543354?text=${message}`;
@@ -653,7 +695,7 @@ export const Cart = () => {
         </div>
       </div>
 
-      {/* Cart Dialog - Improved for Small Screens */}
+      {/* Cart Dialog */}
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogContent className="max-w-[95vw] sm:max-w-lg md:max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl p-0">
           <DialogHeader className="p-4 px-5 sm:px-10 pb-3 border-b sticky top-0 bg-white z-10 rounded-t-2xl">
@@ -682,13 +724,14 @@ export const Cart = () => {
               </div>
             ) : (
               <>
-                {/* Cart Items - Better fit on small screens */}
+                {/* Cart Items */}
                 <div className="space-y-3 px-1 sm:px-0">
                   {cart.map((item, index) => (
                     <div
                       key={index}
                       className="w-full flex gap-3 sm:gap-4 bg-gray-50 rounded-2xl px-4 py-4 sm:p-5 border border-gray-200"
                     >
+                      {/* ... (item card remains exactly the same) ... */}
                       <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 bg-gray-200">
                         <img
                           src={item.imageUrl || "/placeholder.svg"}
@@ -775,10 +818,10 @@ export const Cart = () => {
                 {/* Order Mode */}
                 <div className="bg-gray-100 rounded-2xl p-3 mx-0 sm:mx-0 ">
                   <p className="font-semibold mb-3">Order Type</p>
-                  <div className="grid grid-cols-2 gap-3 lg:justify-self-center">
+                  <div className="grid grid-cols-2 gap-3">
                     <Button
                       variant={orderMode === "offline" ? "green" : "outline"}
-                      className="h-14 md:w-38"
+                      className="h-14"
                       onClick={() => setOrderMode("offline")}
                     >
                       <Store size={22} />
@@ -786,16 +829,16 @@ export const Cart = () => {
                     </Button>
                     <Button
                       variant={orderMode === "online" ? "orange" : "outline"}
-                      className="h-14 md:w-38"
+                      className="h-14"
                       onClick={() => setOrderMode("online")}
                     >
                       <Bike size={22} />
-                      Delivery (+₹50)
+                      Delivery
                     </Button>
                   </div>
                 </div>
 
-                {/* Customer Info */}
+                {/* Customer Info - unchanged */}
                 <div className="space-y-4 mx-1 sm:mx-0">
                   <div className="space-y-1">
                     <Label>Your Name *</Label>
@@ -836,23 +879,38 @@ export const Cart = () => {
                   </div>
                 </div>
 
-                {/* Price Summary */}
+                {/* Price Summary - Updated with Free Delivery Logic */}
                 <div className="bg-linear-to-r from-yellow-50 to-orange-50 rounded-2xl p-5 mx-1 sm:mx-0 border-2 border-yellow-300">
                   <div className="space-y-2">
                     <div className="flex justify-between text-lg">
                       <span>Subtotal</span>
                       <span className="font-bold">₹{subtotal}</span>
                     </div>
+
                     {orderMode === "online" && (
                       <div className="flex justify-between text-lg">
-                        <span>Delivery Charge</span>
-                        <span className="text-blue-600 font-bold">+₹{deliveryCharge}</span>
+                        <span className="">Delivery Charge<p className="text-xs">Free Delivery on Orders above 500/-</p></span>
+                        
+                        {effectiveDeliveryCharge === 0 ? (
+                          <span className="text-green-600 font-bold">FREE</span>
+                        ) : (
+                          <span className="text-blue-600 font-bold">
+                            +₹{effectiveDeliveryCharge}
+                          </span>
+                        )}
                       </div>
                     )}
+
                     <div className="flex justify-between text-2xl font-bold text-green-600 pt-4 border-t-2 border-dashed">
                       <span>Total</span>
                       <span>₹{total}</span>
                     </div>
+
+                    {orderMode === "online" && subtotal >= 500 && (
+                      <p className="text-center text-green-600 text-xs mt-2 font-medium">
+                        🎉 Free Delivery applied on orders above ₹500
+                      </p>
+                    )}
                   </div>
                 </div>
 

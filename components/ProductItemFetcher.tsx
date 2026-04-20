@@ -278,7 +278,7 @@ export default function ProductItemFetcher({
       {Array(8).fill(0).map((_, i) => (
         <div
           key={i}
-          className="p-3 border border-gray-100 rounded-2xl bg-white"
+          className="w-64 p-3 border border-gray-100 rounded-2xl bg-white"
         >
           {/* Image Skeleton */}
           <div className="h-48 w-full bg-gray-200 rounded-xl animate-pulse" />
@@ -347,7 +347,7 @@ export default function ProductItemFetcher({
       )}
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-66 gap-y-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-x-66 gap-y-3">
         {filteredProducts.map((product) => (
           <ProductItem key={product.id} product={product} />
         ))}

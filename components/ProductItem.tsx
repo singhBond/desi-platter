@@ -611,6 +611,7 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
   const images = product.imageUrls.length ? product.imageUrls : [product.imageUrl || "/placeholder.svg"];
   const firstImage = images[0];
 
+  // Reset states when dialogs open
   useEffect(() => {
     if (open) {
       setTempQuantity(1);
@@ -618,6 +619,7 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
     }
   }, [open]);
 
+  // Browser Back Button Support for Product Detail Dialog
   useEffect(() => {
     if (open) {
       window.history.pushState(null, "", window.location.href);
@@ -626,6 +628,21 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
       return () => window.removeEventListener("popstate", handlePopState);
     }
   }, [open]);
+
+  // ==================== NEW: Browser Back Support for Full Screen Image Viewer ====================
+  useEffect(() => {
+    if (fullImageOpen) {
+      window.history.pushState(null, "", window.location.href);
+      
+      const handlePopState = () => {
+        setFullImageOpen(false);
+      };
+
+      window.addEventListener("popstate", handlePopState);
+
+      return () => window.removeEventListener("popstate", handlePopState);
+    }
+  }, [fullImageOpen]);
 
   const addToCart = () => {
     const cart = JSON.parse(localStorage.getItem("fastfood_cart") || "[]");
@@ -677,7 +694,7 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
           onClick?.();
           setOpen(true);
         }}
-        className="overflow-hidden w-64  rounded-2xl bg-white shadow-md hover:shadow-xl transition-all cursor-pointer border border-gray-100 hover:border-slate-300 group relative"
+        className="overflow-hidden w-64 rounded-2xl bg-red-100 shadow-md hover:shadow-xl transition-all cursor-pointer border border-gray-100 hover:border-slate-300 group relative"
       >
         {/* Veg / Non-Veg Indicator - Top Left */}
         <div className="absolute top-3 left-3 z-20">
@@ -729,7 +746,7 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
         </div>
       </div>
 
-      {/* Product Detail Dialog - (Veg/Non-Veg kept here as well for consistency) */}
+      {/* Product Detail Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-full w-full h-full md:max-w-3xl md:h-auto md:max-h-[90vh] rounded-none md:rounded-2xl p-0 overflow-hidden flex flex-col">
           <DialogHeader className="p-4 border-b shrink-0">
@@ -743,7 +760,6 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
             </DialogTitle>
           </DialogHeader>
 
-          {/* Rest of your dialog code remains exactly the same */}
           <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-slate-50">
             <div className="flex flex-col md:flex-row gap-6">
               {/* Image Section */}
@@ -820,7 +836,7 @@ export const ProductItem = ({ product, onClick }: ProductItemProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Full Screen Image Viewer (unchanged) */}
+      {/* Full Screen Image Viewer - Now supports browser back button */}
       <Dialog open={fullImageOpen} onOpenChange={setFullImageOpen}>
         <DialogContent className="max-w-full h-full p-0 bg-black border-none rounded-none">
           <button

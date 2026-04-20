@@ -269,12 +269,12 @@ export const Header = () => (
       “A Hygenic Cloud Kitchen
     </p>
     {/* Contact */}
-    <p className="relative z-10 text-red-400 text-lg md:text-2xl font-semibold mt-1 flex items-center gap-2">
+    <p className="relative z-10 text-red-400 text-md md:text-2xl font-semibold mt-1 flex items-center gap-2">
       📞 Mob: 8340543354
     </p>
 
     {/* Timings */}
-    <p className="relative z-10 text-zinc-400 md:text-lg text-sm font-medium my-1">
+    <p className="relative z-10 text-zinc-400 md:text-lg text-xs font-medium my-1">
       ~ Accepting Online Orders : 11:00 AM – 11:00 PM  ~
     </p>
 
